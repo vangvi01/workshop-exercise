@@ -1,0 +1,15 @@
+# Authenticate to your ECR repository
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 985539754220.dkr.ecr.us-east-1.amazonaws.com
+
+## aws eks update-kubeconfig --region us-east-1 --name hash-lookup-cluster
+# Build the Docker image
+docker build -t message-hash-service .
+
+# Tag the image for your ECR repository
+docker tag message-hash-service:latest 985539754220.dkr.ecr.us-east-1.amazonaws.com/workshop-app:v1.0.0
+
+# Push the image to ECR
+docker push 985539754220.dkr.ecr.us-east-1.amazonaws.com/workshop-app:v1.0.0
+
+## port forward
+kubectl port-forward svc/message-hash-service 8080:80  -n web-hash-service

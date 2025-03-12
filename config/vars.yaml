@@ -1,0 +1,62 @@
+---
+global:
+ environment: "dev"
+ region: "us-east-1"
+ availability_zones: 
+  - "us-east-1a"
+  - "us-east-1b"
+ tags:
+  Environment: "dev"
+  Project    : "Rigetti_Exercise"
+  created_by : "VikasV"
+  
+
+network:
+ vpc_name: "workshop-vpc"
+ cidr_block: "10.0.0.0/16"
+ is_eks_vpc: true  ## If True it will create's proper ELB labels for the subnets 
+ subnet_cidrs:
+  private: 
+    - "10.0.0.0/19"
+    - "10.0.32.0/19"
+  public:
+    - "10.0.64.0/19"
+    - "10.0.96.0/19"
+ enable_dns_support: true
+ enable_dns_hostnames: true
+ resource_tags:
+  is_terraform: true
+
+eks:
+  cluster_name_prefix: "workshop-eks"
+  cluster_version: "1.32"
+  node_group_name: "general"
+  instance_types : 
+   - "t3.large"
+  scaling_config:
+    min_size: 1
+    max_size: 4
+    desired_size: 2
+
+ecr:
+  repository_name      : "workshop-app"
+  image_tag_mutability : "IMMUTABLE"
+  scan_on_push         : true
+  force_delete         : false
+  encryption_type      : "AES256"
+
+app:
+  web_hash_service_config:
+    namespace        : "web-hash-service"
+    create_namespace : true
+    image_config : 
+      registry   : "985539754220.dkr.ecr.us-east-1.amazonaws.com"
+      repository : "workshop-app"
+      tag        : "v1.0.0"
+  dynamodb_config:
+    table_name: "MessageHashStore"
+    read_capacity: 5
+    write_capacity: 5
+    enable_point_in_time_recovery: false
+
+    

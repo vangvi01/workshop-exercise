@@ -1,0 +1,4 @@
+apiVersion: v2
+name: web-hash-service
+description: web-hash-service
+version: 0.1.0
